@@ -11,23 +11,14 @@
 #import "PESDKPlugin.h"
 @import imglyKit;
 
-// UIColorFromRBG via http://stackoverflow.com/a/3532264/4403530
-#define UIColorFromRGB(rgbValue)                                                                                       \
-    [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16)) / 255.0                                               \
-                    green:((float)((rgbValue & 0xFF00) >> 8)) / 255.0                                                  \
-                     blue:((float)(rgbValue & 0xFF)) / 255.0                                                           \
-                    alpha:1.0]
-
-@interface PESDKPlugin () <IMGLYPhotoEditViewControllerDelegate, UIImagePickerControllerDelegate>
-
+@interface PESDKPlugin () <IMGLYPhotoEditViewControllerDelegate>
 @property(strong) CDVInvokedUrlCommand *lastCommand;
-@property(nonatomic, strong) UINavigationController *navigationController;
-
 @end
 
 @implementation PESDKPlugin
 
 + (void)initialize {
+    // Initialize the plugin and prepare the PESDK
     if (self == [PESDKPlugin self]) {
         // [PESDK unlockWithLicenseAt:[[NSBundle mainBundle] URLForResource:@"IOS_LICENSE" withExtension:nil]];
     }
@@ -35,6 +26,12 @@
 
 #pragma mark - Cordova
 
+
+/**
+ Sends a result back to Cordova.
+
+ @param result
+ */
 - (void)finishCommandWithResult:(CDVPluginResult *)result {
     if (self.lastCommand != nil) {
         [self.commandDelegate sendPluginResult:result callbackId:self.lastCommand.callbackId];
@@ -44,10 +41,26 @@
 
 #pragma mark - Public API
 
+/**
+ Presents a CameraViewController, passes the taken/selected
+ image to the PhotoEditorViewController and saves the edited
+ image to the iOS photo library upon save.
+ 
+ The given command is finished with different results, depending
+ on the actions taken by the user:
+ - Cancelling the editor results in no result.
+ - Saving an edited image results in an OK result with the images
+   filepath given as parameter.
+ - Any errors lead to a corresponding result
+ 
+ See the `IMGLYPhotoEditViewControllerDelegate` methods for
+ more details.
+ 
+ @param command The command to be finished with any results.
+ */
 - (void)present:(CDVInvokedUrlCommand *)command {
     if (self.lastCommand == nil) {
         self.lastCommand = command;
-        
         
         IMGLYConfiguration *configuration = [[IMGLYConfiguration alloc] initWithBuilder:^(IMGLYConfigurationBuilder * _Nonnull builder) {
             // Customize the SDK to match your requirements:
@@ -72,6 +85,13 @@
     }
 }
 
+
+/**
+ Closes all PESDK view controllers and sends a result
+ back to Cordova.
+
+ @param result The result to be sent.
+ */
 - (void)closeControllerWithResult:(CDVPluginResult *)result {
     [self.viewController dismissViewControllerAnimated:YES completion:^{
         [self finishCommandWithResult:result];
@@ -153,6 +173,12 @@
 
 #pragma mark - Result Handling
 
+/**
+ Saves an image to the iOS Photo Library and sends
+ the corresponding results to Cordova.
+
+ @param image The image to be saved.
+ */
 - (void)saveImageToPhotoLibrary:(UIImage *)image {
     [self.commandDelegate runInBackground:^{
         __block PHObjectPlaceholder *assetPlaceholder = nil;

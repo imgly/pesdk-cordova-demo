@@ -5,7 +5,10 @@
 # PhotoEditor SDK Cordova Plugin Demo
 This project shows how to easily integrate the [PhotoEditorSDK](https://www.photoeditorsdk.com?utm_source=Github&utm_medium=PESDK&utm_term=Cordova-Demo) into a Cordova application.
 
-**THIS IS A DEMO**. This repository is not meant as a fully fledged Cordova plugin, but as a base for further development instead. You can copy the repository into your own apps folder and use the `cordova plugin add /path/to/plugin --link` command to add this plugin. You will most likely need to adjust the codebase to fit your requirements and to customize the PhotoEditor SDK. For customizations, take a look at the [PESDKPlugin.m](src/ios/PESDKPlugin.m) and [PESDKPlugin.java](src/android/PESDKPlugin.java) files. There you can alter the configurations to change colors, behaviour etc. and handle callbacks that are sent by our SDK. 
+**THIS IS A DEMO**. This repository is not meant as a fully fledged Cordova plugin, but as a base for further development instead. You can copy the repository into your own apps folder and use the `cordova plugin add /path/to/plugin --link` command to add this plugin. You will most likely need to adjust the codebase to fit your requirements and to customize the PhotoEditor SDK. For customizations, take a look at the [PESDKPlugin.m](src/ios/PESDKPlugin.m) and [PESDKPlugin.java](src/android/PESDKPlugin.java) files. There you can alter the configurations to change colors, behaviour etc. and handle callbacks that are sent by our SDK.
+
+## Example app
+The example app demonstrates how to open the PESDKs camera and pass any taken or selected images to the editor. When an edited image is saved, its filepath is sent back to Cordova and displayed using a JavaScript alert. An app could then display this image in Cordova or send it to a backend.
 
 ## Note 
 The PhotoEditorSDK is a product of 9Elements GmbH. 
