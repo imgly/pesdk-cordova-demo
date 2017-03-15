@@ -56,9 +56,8 @@
      <platform name="ios">
          <config-file target="config.xml" parent="/*">
              <feature name="PESDK">
-                 <param name="ios-package" value="PESDK" />
+                 <param name="ios-package" value="PESDKPlugin" />
              </feature>
-            <plugin name="PESDK" value="PESDK"/>
          </config-file>
 
          <header-file src="src/ios/PESDKPlugin.h" />
@@ -81,6 +80,17 @@
             http://stackoverflow.com/questions/36650522/custom-cordova-plugin-add-framework-to-embedded-binaries 
           -->
          <hook type="after_build" src="hooks/add_embedded.js" />
+
+         <!-- 
+            As we can't add plist entries using our applications
+            config.xml, we do it here:
+          -->
+         <config-file parent="NSCameraUsageDescription" target="*-Info.plist">
+            <string>Uses your camera to snap pictures.</string>
+         </config-file>
+         <config-file parent="NSPhotoLibraryUsageDescription" target="*-Info.plist">
+            <string>Accesses your photo library to save and open pictures.</string>
+         </config-file>
      </platform>
 
     <!-- Browser -->
