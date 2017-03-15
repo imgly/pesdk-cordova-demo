@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+apply plugin: 'com.android.application'
+
+repositories {
+    maven {
+        url "https://artifactory.9elements.com/artifactory/imgly"
+    }
+}
+
+android {
+
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+
+    defaultConfig {
+        renderscriptTargetApi 23
+        renderscriptSupportModeEnabled true
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+dependencies {
+    compile 'ly.img.android:photo-editor-sdk:3.0.4'
+}

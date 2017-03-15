@@ -1,0 +1,25 @@
+{
+    "version": "0.1.0",
+    "name": "pesdk",
+    "cordova_name": "pesdk",
+    "description": "Cordova/Phonegap plugin for the PhotoEditor SDK.",
+    "author": "",
+    "license": "Proprietary",
+    "cordova": {
+        "id": "pesdk",
+        "platforms": [
+            "android",
+            "ios"
+        ]
+    },
+    "keywords": [
+        "cordova",
+        "cordova-android",
+        "cordova-ios",
+        "phonegap",
+        "camera"
+    ],
+    "dependencies": {
+        "xcode": "https://github.com/alunny/node-xcode.git"
+    }
+}
