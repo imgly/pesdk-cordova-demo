@@ -1,8 +1,20 @@
+<p align="center">
+  <img src="http://static.photoeditorsdk.com/logo.png" />
+</p>
+
 # PhotoEditor SDK Cordova Plugin Demo
+This project shows how to easily integrate the [PhotoEditorSDK](https://www.photoeditorsdk.com?utm_source=Github&utm_medium=PESDK&utm_term=Cordova-Demo) into a Cordova application.
 
-## NOTES
+**THIS IS A DEMO**. This repository is not meant as a fully fledged Cordova plugin, but as a base for further development instead. You can copy the repository into your own apps folder and use the `cordova plugin add /path/to/plugin --link` command to add this plugin. You will most likely need to adjust the codebase to fit your requirements and to customize the PhotoEditor SDK. For customizations, take a look at the [PESDKPlugin.m](src/ios/PESDKPlugin.m) and [PESDKPlugin.java](src/android/PESDKPlugin.java) files. There you can alter the configurations to change colors, behaviour etc. and handle callbacks that are sent by our SDK. 
 
+## Note 
+The PhotoEditorSDK is a product of 9Elements GmbH. 
+Please [order a license](https://www.photoeditorsdk.com/pricing#contact/?utm_source=Github&utm_medium=PESDK&utm_term=Cordova-Demo). Please see `LICENSE.md` for licensing details.
 
+## PhotoEditor SDK for iOS & Android
+The [PhotoEditor SDK](https://www.photoeditorsdk.com/?utm_source=Github&utm_medium=PESDK&utm_term=Cordova-Demo) for iOS and Android are **fully customizable** photo editors which you can integrate into your React Native app within minutes.
+
+## Installation
 
 ### iOS Configuration
 
@@ -34,6 +46,8 @@ $ make
 $ cp LICENSE_ANDROID example/platforms/android/assets
 ```
 These add the iOS and Android platforms to the example app, install the `pesdk` plugin from the current directory and finally adds the required licenses for the PhotoEditor SDK.
+
+To run the Android and iOS samples simply execute `cordova run android` or `cordova run ios` from the `example` subfolder. If the Android app crashes upon launch you most likely forgot the `cp LICENSE_ANDROID...` command mentioned above.
 
 After you change source code in the native Android/Xcode IDE, make sure to **commit your changes back to the root folder** or you might overwrite your work! 
 
