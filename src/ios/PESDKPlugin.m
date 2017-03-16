@@ -20,7 +20,7 @@
 + (void)initialize {
     // Initialize the plugin and prepare the PESDK
     if (self == [PESDKPlugin self]) {
-        // [PESDK unlockWithLicenseAt:[[NSBundle mainBundle] URLForResource:@"IOS_LICENSE" withExtension:nil]];
+        [PESDK unlockWithLicenseAt:[[NSBundle mainBundle] URLForResource:@"IOS_LICENSE" withExtension:nil]];
     }
 }
 
