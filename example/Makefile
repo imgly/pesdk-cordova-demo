@@ -5,7 +5,7 @@ all: android ios
 clean:
 	cordova platform rm android || true
 	cordova platform rm ios || true
-	cordova plugin rm PESDK || true
+	cordova plugin rm pesdk || true
 
 android:
 	cordova plugin add .. --link
@@ -18,7 +18,7 @@ prepare-android:
 	cordova platform add android
 
 rebuild-android:
-	cordova plugin rm PESDK || true
+	cordova plugin rm pesdk || true
 	cordova plugin add .. --link
 	cordova build android
 

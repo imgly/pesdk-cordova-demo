@@ -6,7 +6,7 @@
     "author": "",
     "license": "Proprietary",
     "cordova": {
-        "id": "pesdk",
+        "id": "cordova-plugin-pesdk",
         "platforms": [
             "android",
             "ios"
