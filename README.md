@@ -11,7 +11,7 @@ This project shows how to easily integrate the [PhotoEditorSDK](https://www.phot
 The included example app demonstrates how to open the PhotoEditor SDK's camera and pass any taken or selected images to the editor. When an edited image is saved, its filepath is sent back to Cordova and displayed using a JavaScript alert. An app could then display this image in Cordova or send it to a backend. To launch the example app, take a look at the *Development* section below.
 
 ## Note 
-The PhotoEditorSDK is a product of 9Elements GmbH. 
+The PhotoEditorSDK is a product of 9elements GmbH. 
 Please [order a license](https://www.photoeditorsdk.com/pricing#contact/?utm_source=Github&utm_medium=PESDK&utm_term=Cordova-Demo). Please see the included [LICENSE](LICENSE.md) for licensing details.
 
 ## PhotoEditor SDK for iOS & Android
@@ -47,7 +47,7 @@ $ cp example/LICENSE_ANDROID example/platforms/android/assets
 ```
 These add the iOS and Android platforms to the example app, install the `pesdk` plugin from the current directory and finally add the required license for the PhotoEditor SDK to the Android application.
 
-Furthermore you need to add the `LICENSE_IOS` file to the Xcode project by opening [PESDKDemo.xcworkspace](example/platforms/ios/PESDKDemo.xcworkspace) using Xcode and dragging the license file into the sidebar.
+Furthermore you need to add the `LICENSE_IOS` file to the Xcode project by opening [PESDKDemo.xcworkspace](/example/platforms/ios/PESDKDemo.xcworkspace) using Xcode and dragging the license file into the sidebar.
 
 To run the Android and iOS samples you can then simply execute `cordova run android` or `cordova run ios` from the `example` subfolder. If the Android app crashes upon launch you most likely forgot the `cp LICENSE_ANDROID...` command mentioned above.
 
@@ -57,3 +57,12 @@ After you change source code in the native Android/Xcode IDE, make sure to **com
 Run `make clean android` to create a test APK file. You can open `example/platforms/android` directly with Android Studio.
 ### iOS
 Run `make clean ios` and a test project is built. It will build an xcode project in `example/platforms/ios`.
+
+## License
+Please see [LICENSE](https://github.com/imgly/pesdk-html5-rails/blob/master/LICENSE.md) for licensing details.
+
+## Authors and Contributors
+Made 2013-2017 by @9elements
+
+## Support or Contact
+Contact contact@photoeditorsdk.com for support requests or to upgrade to an enterprise licence.
