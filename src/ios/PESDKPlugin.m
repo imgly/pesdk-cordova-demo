@@ -9,9 +9,9 @@
 #import <Photos/Photos.h>
 #import <objc/message.h>
 #import "PESDKPlugin.h"
-@import imglyKit;
+@import PhotoEditorSDK;
 
-@interface PESDKPlugin () <IMGLYPhotoEditViewControllerDelegate>
+@interface PESDKPlugin () <PESDKPhotoEditViewControllerDelegate>
 @property(strong) CDVInvokedUrlCommand *lastCommand;
 @end
 
@@ -53,7 +53,7 @@
    filepath given as parameter.
  - Any errors lead to a corresponding result
  
- See the `IMGLYPhotoEditViewControllerDelegate` methods for
+ See the `PESDKPhotoEditViewControllerDelegate` methods for
  more details.
  
  @param command The command to be finished with any results.
@@ -62,17 +62,17 @@
     if (self.lastCommand == nil) {
         self.lastCommand = command;
         
-        IMGLYConfiguration *configuration = [[IMGLYConfiguration alloc] initWithBuilder:^(IMGLYConfigurationBuilder * _Nonnull builder) {
+        PESDKConfiguration *configuration = [[PESDKConfiguration alloc] initWithBuilder:^(PESDKConfigurationBuilder * _Nonnull builder) {
             // Customize the SDK to match your requirements:
             // ...eg.:
             // [builder setBackgroundColor:[UIColor whiteColor]];
         }];
         
-        IMGLYCameraViewController *cameraViewController = [[IMGLYCameraViewController alloc] initWithConfiguration:configuration];
+        PESDKCameraViewController *cameraViewController = [[PESDKCameraViewController alloc] initWithConfiguration:configuration];
         [cameraViewController setCompletionBlock:^(UIImage * _Nullable image, NSURL * _Nullable url) {
-            IMGLYPhotoEditViewController *photoEditViewController = [[IMGLYPhotoEditViewController alloc] initWithPhoto:image configuration:configuration];
+            PESDKPhotoEditViewController *photoEditViewController = [[PESDKPhotoEditViewController alloc] initWithPhoto:image configuration:configuration];
             photoEditViewController.delegate = self;
-            IMGLYToolbarController *toolbarController = [IMGLYToolbarController new];
+            PESDKToolbarController *toolbarController = [PESDKToolbarController new];
             [toolbarController pushViewController:photoEditViewController animated:YES completion:nil];
             [self.viewController dismissViewControllerAnimated:YES completion:^{
                 [self.viewController presentViewController:toolbarController animated:YES completion:nil];
@@ -147,10 +147,10 @@
     return url;
 }
 
-#pragma mark - IMGLYPhotoEditViewControllerDelegate
+#pragma mark - PESDKPhotoEditViewControllerDelegate
 
 // The PhotoEditViewController did save an image.
-- (void)photoEditViewController:(IMGLYPhotoEditViewController *)photoEditViewController didSaveImage:(UIImage *)image imageAsData:(NSData *)data {
+- (void)photoEditViewController:(PESDKPhotoEditViewController *)photoEditViewController didSaveImage:(UIImage *)image imageAsData:(NSData *)data {
     if (image) {
         [self saveImageToPhotoLibrary:image];
     } else {
@@ -160,13 +160,13 @@
 }
 
 // The PhotoEditViewController was cancelled.
-- (void)photoEditViewControllerDidCancel:(IMGLYPhotoEditViewController *)photoEditViewController {
+- (void)photoEditViewControllerDidCancel:(PESDKPhotoEditViewController *)photoEditViewController {
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
     [self closeControllerWithResult:result];
 }
 
 // The PhotoEditViewController could not create an image.
-- (void)photoEditViewControllerDidFailToGeneratePhoto:(IMGLYPhotoEditViewController *)photoEditViewController {
+- (void)photoEditViewControllerDidFailToGeneratePhoto:(PESDKPhotoEditViewController *)photoEditViewController {
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Image editing failed."];
     [self closeControllerWithResult:result];
 }

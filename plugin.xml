@@ -21,7 +21,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:rim="http://www.blackberry.com/ns/widgets"
-    id="cordova-plugin-pesdk" version="1.0.0">
+    id="cordova-plugin-pesdk" version="1.1.0">
     <name>PESDK</name>
     <description>PhotoEditor SDK Cordova Plugin</description>
     <license>Apache 2.0</license>
@@ -70,7 +70,7 @@
          <framework src="QuartzCore.framework" />
          <framework src="AssetsLibrary.framework" />
          <framework src="MobileCoreServices.framework" />
-         <framework src="src/ios/imglyKit.framework" custom="true" embed="true" />
+         <framework src="src/ios/PhotoEditorSDK.framework" custom="true" embed="true" />
 
          <hook type="after_plugin_install" src="hooks/resolveDependencies.js" />
          <hook type="after_platform_add" src="hooks/resolveDependencies.js" />
