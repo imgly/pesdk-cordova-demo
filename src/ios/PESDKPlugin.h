@@ -7,7 +7,7 @@
 //
 
 #import <Cordova/CDV.h>
-@import imglyKit;
+@import PhotoEditorSDK;
 
 @interface PESDKPlugin : CDVPlugin
 
