@@ -27,9 +27,8 @@ var app = {
   // Bind any cordova events here. Common events are:
   // 'pause', 'resume', etc.
   onDeviceReady: function() {
-    // Bind 'Select Picture' button
-    cameraButton = document.getElementById('js-cameraButton');
-    cameraButton.addEventListener('click', function() {
+    selectImageBtn = document.getElementById('js-selectImageBtn');
+    selectImageBtn.addEventListener('click', function() {
       console.log('Opening image picker...');
       window.imagePicker.getPictures(
         function(results) {
@@ -53,7 +52,7 @@ var app = {
         }
       );
     });
-    cameraButton.disabled = false;
+    selectImageBtn.disabled = false;
   }
 };
 
