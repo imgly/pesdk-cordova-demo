@@ -42,7 +42,8 @@ body {
 
 /* Portrait layout (default) */
 .app {
-    background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
+    background:url(../img/logo.svg) no-repeat center center; /* 170px x 200px */
+    background-size: contain;
     position:absolute;             /* position in the center of the screen */
     left:50%;
     top:50%;
