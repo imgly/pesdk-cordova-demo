@@ -29,28 +29,45 @@ public class PESDKPlugin extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         if (action.equals("present")) {
+            // Extract image path
+            JSONObject options = data.getJSONObject(0);
+            filepath = options.getString("path");
+
             Activity activity = this.cordova.getActivity();
-            activity.runOnUiThread(this.present(activity, callbackContext));
+            activity.runOnUiThread(this.present(activity, filepath, callbackContext));
             return true;
         } else {
             return false;
         }
     }
 
-    private Runnable present(final Activity mainActivity, final CallbackContext callbackContext) {
+    private Runnable present(final Activity mainActivity, String filepath final CallbackContext callbackContext) {
         final PESDKPlugin self = this;
         return new Runnable() {
             public void run() {
-                Intent intent = new Intent(mainActivity, CameraActivity.class);
-                self.callback = callbackContext;
-                cordova.startActivityForResult(self, intent, CameraActivity.CAMERA_PREVIEW_RESULT);
+                if (getCurrentActivity() != null) {
+                    SettingsList settingsList = new SettingsList();
+                    settingsList
+                        .getSettingsModel(EditorLoadSettings.class)
+                        .setImageSourcePath(filepath, true) // Load with delete protection true!
+                        .getSettingsModel(EditorSaveSettings.class)
+                        .setExportDir(Directory.DCIM, "test")
+                        .setExportPrefix("result_")
+                        .setSavePolicy(
+                            EditorSaveSettings.SavePolicy.KEEP_SOURCE_AND_CREATE_ALWAYS_OUTPUT
+                        );
+
+                    new PhotoEditorBuilder(getCurrentActivity())
+                            .setSettingsList(settingsList)
+                            .startActivityForResult(getCurrentActivity(), PESDK_EDITOR_RESULT);
+                }
             }
-        };
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, android.content.Intent data) {
-        if (requestCode == CameraActivity.CAMERA_PREVIEW_RESULT) {
+        if (requestCode == CameraActivity.PESDK_EDITOR_RESULT) {
             switch (resultCode){
                 case Activity.RESULT_OK:
                     success(data);
