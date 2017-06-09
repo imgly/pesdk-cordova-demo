@@ -1,7 +1,7 @@
 {
     "version": "0.2.0",
-    "name": "pesdk",
-    "cordova_name": "pesdk",
+    "name": "pesdk-cordova-plugin",
+    "cordova_name": "pesdk-cordova-plugin",
     "description": "Cordova/Phonegap plugin for the PhotoEditor SDK.",
     "author": "",
     "license": "Proprietary",

@@ -34,6 +34,7 @@ var app = {
           let imageURI = results[0];
           PESDK.present(
             function(result){
+              console.log(result);
               alert('PESDK result: ' + JSON.stringify(result));
             },
             function(error){
