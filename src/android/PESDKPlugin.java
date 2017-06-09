@@ -49,7 +49,7 @@ public class PESDKPlugin extends CordovaPlugin {
                     SettingsList settingsList = new SettingsList();
                     settingsList
                         .getSettingsModel(EditorLoadSettings.class)
-                        .setImageSourcePath(filepath, true) // Load with delete protection true!
+                        .setImageSourcePath(filepath.replace("file://", ""), true) // Load with delete protection true!
                         .getSettingsModel(EditorSaveSettings.class)
                         .setExportDir(Directory.DCIM, "test")
                         .setExportPrefix("result_")

@@ -24,13 +24,11 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background-color:#f5f5f5;
-    background-image:url(../img/header.jpg);
+    background:url(../img/header.jpg);
+    background-color: #F5F5F5;
     background-position:top center;
     background-repeat:no-repeat;
-    background-size:contain;
-    background-attachment: fixed;
-
+    background-size:100% auto;
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     font-size:12px;
     height:100%;
@@ -52,7 +50,6 @@ body {
     text-align:center;
     padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
     margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
-                                   /* offset horizontal: half of text area width */
 }
 
 .app {

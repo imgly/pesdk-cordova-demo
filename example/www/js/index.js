@@ -29,7 +29,6 @@ var app = {
   onDeviceReady: function() {
     selectImageBtn = document.getElementById('js-selectImageBtn');
     selectImageBtn.addEventListener('click', function() {
-      console.log('Opening image picker...');
       window.imagePicker.getPictures(
         function(results) {
           let imageURI = results[0];
