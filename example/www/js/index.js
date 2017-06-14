@@ -27,35 +27,32 @@ var app = {
   // Bind any cordova events here. Common events are:
   // 'pause', 'resume', etc.
   onDeviceReady: function() {
-    this.receivedEvent('deviceready');
-
-    // Bind test button
-    cameraButton = document.getElementById('js-cameraButton');
-    cameraButton.addEventListener('click', function() {
-      PESDK.present(
-        function(result){
-          alert('PESDK result: ' + JSON.stringify(result));
-          // TODO: Show resulting image?
-        },
-        function(error){
-          alert('PESDK error: ' + error);
-        },
-        {sourceType: 1}
+    selectImageBtn = document.getElementById('js-selectImageBtn');
+    selectImageBtn.addEventListener('click', function() {
+      window.imagePicker.getPictures(
+        function(results) {
+          let imageURI = results[0];
+          PESDK.present(
+            function(result){
+              console.log(result);
+              alert('PESDK result: ' + JSON.stringify(result));
+            },
+            function(error){
+              alert('PESDK error: ' + error);
+            },
+            {
+              sourceType: 1,
+              path: imageURI
+            }
+          );
+        }, function (error) {
+          console.log('Error: ' + error);
+        }, {
+          maximumImagesCount: 1
+        }
       );
     });
-    cameraButton.disabled = false;
-  },
-
-  // Update DOM on a Received Event
-  receivedEvent: function(id) {
-    var parentElement = document.getElementById(id);
-    var listeningElement = parentElement.querySelector('.listening');
-    var receivedElement = parentElement.querySelector('.received');
-
-    listeningElement.setAttribute('style', 'display:none;');
-    receivedElement.setAttribute('style', 'display:block;');
-
-    console.log('Received Event: ' + id);
+    selectImageBtn.disabled = false;
   }
 };
 

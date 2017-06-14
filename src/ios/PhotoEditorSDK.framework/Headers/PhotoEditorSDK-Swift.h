@@ -138,6 +138,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 @import Foundation;
 @import ObjectiveC;
 @import QuartzCore;
+@import CoreLocation;
 @import GLKit;
 @import CoreImage;
 @import OpenGLES;
@@ -356,6 +357,8 @@ SWIFT_CLASS_NAMED("AdjustToolController")
 - (void)viewWillLayoutSubviews;
 /// :nodoc:
 - (void)updateViewConstraints;
+/// :nodoc:
+@property (nonatomic, readonly) UIEdgeInsets preferredPreviewViewInsets;
 /// :nodoc:
 - (void)photoEditModelDidChange;
 /// :nodoc:
@@ -592,6 +595,14 @@ typedef SWIFT_ENUM_NAMED(NSInteger, PESDKBlendMode, "BlendMode") {
   PESDKBlendModeLighten = 8,
 };
 
+/// This is used to set the quality of the blur
+typedef SWIFT_ENUM(NSInteger, BlurQuality) {
+/// Low is used during preview.
+  BlurQualityLow = 0,
+/// High is used during export.
+  BlurQualityHigh = 1,
+};
+
 
 
 /// This class represents a gradient control view. It is used within the focus tool to visualize
@@ -600,6 +611,8 @@ SWIFT_CLASS_NAMED("FocusGradientView")
 @interface PESDKFocusGradientView : UIControl
 /// The center point between both control points.
 @property (nonatomic, readonly) CGPoint centerPoint;
+/// This value is used during the drag limit calculation, and should be set to the slider height.
+@property (nonatomic) CGFloat sliderHeight;
 /// The absolute fade width value. This value is between 0 and 100.
 @property (nonatomic) CGFloat fadeWidth;
 /// The normalized fade width.
@@ -696,12 +709,6 @@ SWIFT_CLASS_NAMED("BrushColorToolController")
 
 @interface PESDKBrushColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 /// :nodoc:
-- (void)collectionView:(UICollectionView * _Nonnull)collectionView didSelectItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath;
-@end
-
-
-@interface PESDKBrushColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
-/// :nodoc:
 - (UICollectionViewCell * _Nonnull)collectionView:(UICollectionView * _Nonnull)collectionView cellForItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath SWIFT_WARN_UNUSED_RESULT;
 @end
 
@@ -710,6 +717,12 @@ SWIFT_CLASS_NAMED("BrushColorToolController")
 @interface PESDKBrushColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 /// :nodoc:
 - (void)colorPicker:(PESDKColorPickerView * _Nonnull)colorPickerView didPickColor:(UIColor * _Nonnull)color;
+@end
+
+
+@interface PESDKBrushColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
+/// :nodoc:
+- (void)collectionView:(UICollectionView * _Nonnull)collectionView didSelectItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath;
 @end
 
 @class UIImage;
@@ -787,6 +800,8 @@ SWIFT_CLASS_NAMED("BrushToolController")
 - (void)viewWillLayoutSubviews;
 /// :nodoc:
 - (void)updateViewConstraints;
+/// :nodoc:
+@property (nonatomic, readonly) UIEdgeInsets preferredPreviewViewInsets;
 /// :nodoc:
 - (void)editViewControllerDidLayoutSubviews;
 /// :nodoc:
@@ -1065,6 +1080,10 @@ SWIFT_CLASS_NAMED("Button")
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)aDecoder OBJC_DESIGNATED_INITIALIZER;
 @end
 
+
+@interface CLLocation (SWIFT_EXTENSION(PhotoEditorSDK))
+@end
+
 @class GLKView;
 enum RecordingMode : NSInteger;
 @class NSError;
@@ -1177,11 +1196,17 @@ SWIFT_CLASS_NAMED("CameraController")
 ///
 - (void)switchToCameraAtPosition:(AVCaptureDevicePosition)position;
 /// Takes a photo and hands it over to the completion block. The completion block always runs on the main
-/// thread.
+/// thread. This method loses the image’s metadata.
 /// \param completion A completion block that has an image and an error as parameters.
 /// If the image was taken sucessfully the error is nil.
 ///
 - (void)takePhoto:(void (^ _Nonnull)(UIImage * _Nullable, NSError * _Nullable))completion;
+/// Takes a photo and hands it over to the completion block. The completion block always runs on
+/// the main thread. Use this method to preserve the image’s metadata.
+/// \param completion A completion block that has data and an error as parameters.
+/// If the image was taken successfully the error is <code>nil</code>.
+///
+- (void)takePhotoAndReturnData:(void (^ _Nonnull)(NSData * _Nullable, NSError * _Nullable))completion;
 /// Starts the video recording. This only works if <code>recordingMode</code> is set to .Video. You should
 /// set appropriate blocks for <code>videoRecordingStartedHandler</code>, <code>videoRecordingFailedHandler</code>,
 /// <code>videoRecordingFinishedHandler</code> and <code>videoRecordingProgressHandler</code>. The finished handler gets
@@ -1199,6 +1224,13 @@ SWIFT_CLASS_NAMED("CameraController")
 - (void)zoomWithDesiredZoomFactor:(CGFloat)zoomFactor;
 /// :nodoc:
 - (void)observeValueForKeyPath:(NSString * _Nullable)keyPath ofObject:(id _Nullable)object change:(NSDictionary<NSKeyValueChangeKey, id> * _Nullable)change context:(void * _Nullable)context;
+@end
+
+@class CLLocationManager;
+
+@interface PESDKCameraController (SWIFT_EXTENSION(PhotoEditorSDK)) <CLLocationManagerDelegate>
+/// :nodoc:
+- (void)locationManager:(CLLocationManager * _Nonnull)manager didUpdateLocations:(NSArray<CLLocation *> * _Nonnull)locations;
 @end
 
 
@@ -1287,6 +1319,10 @@ SWIFT_CLASS_NAMED("CameraViewController")
 @property (nonatomic, readonly, strong) PESDKCameraController * _Nullable cameraController;
 /// The block that is called once the capture process has finished.
 @property (nonatomic, copy) void (^ _Nullable completionBlock)(UIImage * _Nullable, NSURL * _Nullable);
+/// The block that is called once a photo has been taken. It is passed a Data instance, containing
+/// a JPEG image with metadata. The <code>UIImage</code> passed to <code>completionBlock</code> does not contain any
+/// metadata. If this is set, then <code>completionBlock</code> won’t be called.
+@property (nonatomic, copy) void (^ _Nullable dataCompletionBlock)(NSData * _Nullable);
 /// :nodoc:
 - (void)viewDidLoad;
 /// :nodoc:
@@ -1614,21 +1650,25 @@ SWIFT_CLASS_NAMED("ColorPickerView")
 
 
 
-@interface PESDKColorToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <UICollectionViewDelegateFlowLayout>
-/// :nodoc:
-- (UIEdgeInsets)collectionView:(UICollectionView * _Nonnull)collectionView layout:(UICollectionViewLayout * _Nonnull)collectionViewLayout insetForSectionAtIndex:(NSInteger)section SWIFT_WARN_UNUSED_RESULT;
-@end
-
-
 @interface PESDKColorToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <UICollectionViewDelegate>
 /// :nodoc:
 - (void)collectionView:(UICollectionView * _Nonnull)collectionView didSelectItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath;
 @end
 
 
+@interface PESDKColorToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <UICollectionViewDelegateFlowLayout>
+/// :nodoc:
+- (UIEdgeInsets)collectionView:(UICollectionView * _Nonnull)collectionView layout:(UICollectionViewLayout * _Nonnull)collectionViewLayout insetForSectionAtIndex:(NSInteger)section SWIFT_WARN_UNUSED_RESULT;
+@end
+
+
 @interface PESDKColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 /// :nodoc:
 - (void)colorPicker:(PESDKColorPickerView * _Nonnull)colorPickerView didPickColor:(UIColor * _Nonnull)color;
+@end
+
+
+@interface PESDKColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 @end
 
 
@@ -1639,10 +1679,6 @@ SWIFT_CLASS_NAMED("ColorPickerView")
 - (NSInteger)collectionView:(UICollectionView * _Nonnull)collectionView numberOfItemsInSection:(NSInteger)section SWIFT_WARN_UNUSED_RESULT;
 /// :nodoc:
 - (UICollectionViewCell * _Nonnull)collectionView:(UICollectionView * _Nonnull)collectionView cellForItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath SWIFT_WARN_UNUSED_RESULT;
-@end
-
-
-@interface PESDKColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 @end
 
 @class PESDKColorToolControllerOptionsBuilder;
@@ -2414,6 +2450,8 @@ SWIFT_CLASS_NAMED("FilterToolController")
 /// :nodoc:
 - (void)updateViewConstraints;
 /// :nodoc:
+@property (nonatomic, readonly) UIEdgeInsets preferredPreviewViewInsets;
+/// :nodoc:
 - (void)photoEditModelDidChange;
 /// :nodoc:
 - (void)didBecomeActiveTool;
@@ -2506,11 +2544,15 @@ SWIFT_CLASS_NAMED("FocusToolController")
 /// :nodoc:
 - (void)viewWillLayoutSubviews;
 /// :nodoc:
+- (void)viewDidLayoutSubviews;
+/// :nodoc:
 - (void)updateViewConstraints;
 /// :nodoc:
 - (void)viewWillAppear:(BOOL)animated;
 /// :nodoc:
 - (void)editViewControllerDidLayoutSubviews;
+/// :nodoc:
+@property (nonatomic, readonly) UIEdgeInsets preferredPreviewViewInsets;
 /// :nodoc:
 - (void)photoEditModelDidChange;
 /// :nodoc:
@@ -3021,10 +3063,6 @@ SWIFT_PROTOCOL_NAMED("ProgressViewDisplayer")
 @end
 
 
-@interface PESDKFrameToolController (SWIFT_EXTENSION(PhotoEditorSDK))
-@end
-
-
 @interface PESDKFrameToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <PESDKCropAndStraightenViewDelegate>
 /// :nodoc:
 - (void)cropAndStraightenViewWillBeginTracking:(PESDKCropAndStraightenView * _Nonnull)cropAndStraightenView;
@@ -3032,6 +3070,10 @@ SWIFT_PROTOCOL_NAMED("ProgressViewDisplayer")
 - (void)cropAndStraightenViewDidEndTracking:(PESDKCropAndStraightenView * _Nonnull)cropAndStraightenView;
 /// :nodoc:
 - (void)cropAndStraightenViewDidTrack:(PESDKCropAndStraightenView * _Nonnull)cropAndStraightenView;
+@end
+
+
+@interface PESDKFrameToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 @end
 
 
@@ -3410,7 +3452,7 @@ SWIFT_CLASS("_TtC14PhotoEditorSDK12LicenseModel")
 
 @class NSValue;
 
-/// Applies a linear focus to an instance of <code>CIImage</code>.
+/// Applies a radial focus to an instance of <code>CIImage</code>.
 SWIFT_CLASS_NAMED("LinearFocusFilter")
 @interface PESDKLinearFocusFilter : CIFilter
 /// The input image.
@@ -3419,10 +3461,12 @@ SWIFT_CLASS_NAMED("LinearFocusFilter")
 @property (nonatomic, strong) NSValue * _Nullable inputNormalizedControlPoint1;
 /// The second normalized control point of the focus. This control point should use the coordinate system of Core Image, which means that (0,0) is at the top left.
 @property (nonatomic, strong) NSValue * _Nullable inputNormalizedControlPoint2;
-/// The blur radius to use for focus. Default is 25.
+/// The blur radius to use for focus. Default is 10.
 @property (nonatomic, strong) NSNumber * _Nullable inputRadius;
 /// The fade width to use for focus. Default is 0.
 @property (nonatomic, strong) NSNumber * _Nullable inputNormalizedFadeWidth;
+/// The quality that should be used. Low should be used only during preview.
+@property (nonatomic) enum BlurQuality inputBlurQuality;
 /// :nodoc:
 - (void)setDefaults;
 /// :nodoc:
@@ -3757,6 +3801,8 @@ SWIFT_CLASS_NAMED("OverlayToolController")
 - (void)viewWillLayoutSubviews;
 /// :nodoc:
 - (void)updateViewConstraints;
+/// :nodoc:
+@property (nonatomic, readonly) UIEdgeInsets preferredPreviewViewInsets;
 /// :nodoc:
 - (void)photoEditModelDidChange;
 /// :nodoc:
@@ -4319,7 +4365,8 @@ SWIFT_CLASS_NAMED("PhotoEditViewControllerOptions")
 /// If set this closure is called when the user taps the discard button while changes to the
 /// image are applied. You can for example use this to present an alert view informing the user
 /// that he is about to lose his changes. You have to call the passed closure when you have
-/// confirmation by the user to continue with program execution.
+/// confirmation by the user to continue with program execution. By default it is set to present
+/// an <code>UIAlertController</code>.
 @property (nonatomic, readonly, copy) void (^ _Nullable discardConfirmationClosure)(PESDKPhotoEditViewController * _Nonnull, void (^ _Nonnull)(void));
 /// Returns a newly allocated instance of a <code>PhotoEditViewControllerOptions</code> using the default builder.
 ///
@@ -4384,7 +4431,8 @@ SWIFT_CLASS_NAMED("PhotoEditViewControllerOptionsBuilder")
 /// If set this closure is called when the user taps the discard button while changes to the
 /// image are applied. You can for example use this to present an alert view informing the user
 /// that he is about to lose his changes. You have to call the passed closure when you have
-/// confirmation by the user to continue with program execution.
+/// confirmation by the user to continue with program execution. By default it is set to present
+/// an <code>UIAlertController</code>.
 @property (nonatomic, copy) void (^ _Nullable discardConfirmationClosure)(PESDKPhotoEditViewController * _Nonnull, void (^ _Nonnull)(void));
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
@@ -4410,8 +4458,7 @@ SWIFT_CLASS_NAMED("PhotoEffect")
 @property (nonatomic, readonly, copy) NSString * _Nonnull identifier;
 /// The name of the <code>CIFilter</code> that should be used to apply this effect.
 @property (nonatomic, readonly, copy) NSString * _Nullable ciFilterName;
-/// The URL of the lut image that should be used to generate a color cube. This is only used if <code>CIFilterName</code> is
-/// <code>CIColorCube</code> or <code>CIColorCubeWithColorSpace</code> and <code>options</code> does not include a key named <code>inputCubeData</code>.
+/// The URL of the lut image that should be used to generate a color cube.
 @property (nonatomic, readonly, copy) NSURL * _Nullable lutURL;
 /// The name that is displayed to the user.
 @property (nonatomic, readonly, copy) NSString * _Nonnull displayName;
@@ -4422,8 +4469,6 @@ SWIFT_CLASS_NAMED("PhotoEffect")
 ///
 /// \param filterName The name of the <code>CIFilter</code> that should be used to apply this effect.
 ///
-/// \param lutURL The URL of the lut image that should be used to generate a color cube. This is only used if <code>filterName</code> is <code>CIColorCube</code> or <code>CIColorCubeWithColorSpace</code> and <code>options</code> does not include a key named <code>inputCubeData</code>.
-///
 /// \param displayName The name that is displayed to the user.
 ///
 /// \param options Additional options that should be passed to the <code>CIFilter</code> object that will be created when applying this effect.
@@ -4431,9 +4476,9 @@ SWIFT_CLASS_NAMED("PhotoEffect")
 ///
 /// returns:
 /// A newly initialized <code>PhotoEffect</code> object.
-- (nonnull instancetype)initWithIdentifier:(NSString * _Nonnull)identifier ciFilterName:(NSString * _Nullable)filterName lutURL:(NSURL * _Nullable)lutURL displayName:(NSString * _Nonnull)displayName options:(NSDictionary<NSString *, id> * _Nullable)options OBJC_DESIGNATED_INITIALIZER;
-/// Creates a photo effect that uses a <code>CIColorCubeWithColorSpace</code> filter and the LUT at url
-/// <code>lutURL</code> to generate the color cube data.
+- (nonnull instancetype)initWithIdentifier:(NSString * _Nonnull)identifier ciFilterName:(NSString * _Nullable)filterName displayName:(NSString * _Nonnull)displayName options:(NSDictionary<NSString *, id> * _Nullable)options OBJC_DESIGNATED_INITIALIZER;
+/// Creates a photo effect that uses the LUT at url <code>lutURL</code> to generate the color cube data for
+/// the filter.
 /// \param identifier An identifier that uniquely identifies the effect.
 ///
 /// \param lutURL The URL of the lut image that should be used to generate a color cube.
@@ -4498,10 +4543,12 @@ SWIFT_CLASS_NAMED("RadialFocusFilter")
 @property (nonatomic, strong) NSValue * _Nullable inputNormalizedControlPoint1;
 /// The second normalized control point of the focus. This control point should use the coordinate system of Core Image, which means that (0,0) is at the top left.
 @property (nonatomic, strong) NSValue * _Nullable inputNormalizedControlPoint2;
-/// The blur radius to use for focus. Default is 25.
+/// The blur radius to use for focus. Default is 10.
 @property (nonatomic, strong) NSNumber * _Nullable inputRadius;
 /// The fade width to use for focus. Default is 0.
 @property (nonatomic, strong) NSNumber * _Nullable inputNormalizedFadeWidth;
+/// The quality that should be used. Low should be used only during preview.
+@property (nonatomic) enum BlurQuality inputBlurQuality;
 /// :nodoc:
 - (void)setDefaults;
 /// :nodoc:
@@ -5096,13 +5143,13 @@ SWIFT_CLASS_NAMED("StickerColorToolController")
 
 @interface PESDKStickerColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 /// :nodoc:
-- (UICollectionViewCell * _Nonnull)collectionView:(UICollectionView * _Nonnull)collectionView cellForItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath SWIFT_WARN_UNUSED_RESULT;
+- (void)colorPicker:(PESDKColorPickerView * _Nonnull)colorPickerView didPickColor:(UIColor * _Nonnull)color;
 @end
 
 
 @interface PESDKStickerColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 /// :nodoc:
-- (void)colorPicker:(PESDKColorPickerView * _Nonnull)colorPickerView didPickColor:(UIColor * _Nonnull)color;
+- (UICollectionViewCell * _Nonnull)collectionView:(UICollectionView * _Nonnull)collectionView cellForItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath SWIFT_WARN_UNUSED_RESULT;
 @end
 
 
@@ -5210,15 +5257,15 @@ SWIFT_CLASS_NAMED("StickerOptionsToolController")
 @end
 
 
-@interface PESDKStickerOptionsToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <UICollectionViewDelegateFlowLayout>
-/// :nodoc:
-- (UIEdgeInsets)collectionView:(UICollectionView * _Nonnull)collectionView layout:(UICollectionViewLayout * _Nonnull)collectionViewLayout insetForSectionAtIndex:(NSInteger)section SWIFT_WARN_UNUSED_RESULT;
-@end
-
-
 @interface PESDKStickerOptionsToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <UICollectionViewDelegate>
 /// :nodoc:
 - (void)collectionView:(UICollectionView * _Nonnull)collectionView didSelectItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath;
+@end
+
+
+@interface PESDKStickerOptionsToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <UICollectionViewDelegateFlowLayout>
+/// :nodoc:
+- (UIEdgeInsets)collectionView:(UICollectionView * _Nonnull)collectionView layout:(UICollectionViewLayout * _Nonnull)collectionViewLayout insetForSectionAtIndex:(NSInteger)section SWIFT_WARN_UNUSED_RESULT;
 @end
 
 
@@ -5513,12 +5560,6 @@ SWIFT_CLASS_NAMED("TextColorToolController")
 
 @interface PESDKTextColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 /// :nodoc:
-- (void)colorPicker:(PESDKColorPickerView * _Nonnull)colorPickerView didPickColor:(UIColor * _Nonnull)color;
-@end
-
-
-@interface PESDKTextColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
-/// :nodoc:
 - (void)collectionView:(UICollectionView * _Nonnull)collectionView didSelectItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath;
 @end
 
@@ -5526,6 +5567,12 @@ SWIFT_CLASS_NAMED("TextColorToolController")
 @interface PESDKTextColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 /// :nodoc:
 - (UICollectionViewCell * _Nonnull)collectionView:(UICollectionView * _Nonnull)collectionView cellForItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath SWIFT_WARN_UNUSED_RESULT;
+@end
+
+
+@interface PESDKTextColorToolController (SWIFT_EXTENSION(PhotoEditorSDK))
+/// :nodoc:
+- (void)colorPicker:(PESDKColorPickerView * _Nonnull)colorPickerView didPickColor:(UIColor * _Nonnull)color;
 @end
 
 
@@ -5615,16 +5662,6 @@ SWIFT_CLASS_NAMED("TextFontToolController")
 @end
 
 
-@interface PESDKTextFontToolController (SWIFT_EXTENSION(PhotoEditorSDK))
-@end
-
-
-@interface PESDKTextFontToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <PESDKFontSelectorViewDelegate>
-/// :nodoc:
-- (void)fontSelectorView:(PESDKFontSelectorView * _Nonnull)fontSelectorView didSelectFontWithName:(NSString * _Nonnull)fontName;
-@end
-
-
 @interface PESDKTextFontToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <UICollectionViewDelegate>
 /// :nodoc:
 - (void)collectionView:(UICollectionView * _Nonnull)collectionView didSelectItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath;
@@ -5637,6 +5674,20 @@ SWIFT_CLASS_NAMED("TextFontToolController")
 @end
 
 
+@interface PESDKTextFontToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <PESDKFontSelectorViewDelegate>
+/// :nodoc:
+- (void)fontSelectorView:(PESDKFontSelectorView * _Nonnull)fontSelectorView didSelectFontWithName:(NSString * _Nonnull)fontName;
+@end
+
+
+@interface PESDKTextFontToolController (SWIFT_EXTENSION(PhotoEditorSDK))
+@end
+
+
+@interface PESDKTextFontToolController (SWIFT_EXTENSION(PhotoEditorSDK))
+@end
+
+
 @interface PESDKTextFontToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <UICollectionViewDataSource>
 /// :nodoc:
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView * _Nonnull)collectionView SWIFT_WARN_UNUSED_RESULT;
@@ -5644,10 +5695,6 @@ SWIFT_CLASS_NAMED("TextFontToolController")
 - (NSInteger)collectionView:(UICollectionView * _Nonnull)collectionView numberOfItemsInSection:(NSInteger)section SWIFT_WARN_UNUSED_RESULT;
 /// :nodoc:
 - (UICollectionViewCell * _Nonnull)collectionView:(UICollectionView * _Nonnull)collectionView cellForItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath SWIFT_WARN_UNUSED_RESULT;
-@end
-
-
-@interface PESDKTextFontToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 @end
 
 
@@ -6175,6 +6222,7 @@ SWIFT_CLASS_NAMED("TransformToolController")
 - (void)viewDidLayoutSubviews;
 /// :nodoc:
 - (void)updateViewConstraints;
+/// :nodoc:
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator> _Nonnull)coordinator;
 /// :nodoc:
 @property (nonatomic, readonly) UIEdgeInsets preferredPreviewViewInsets;
@@ -6194,15 +6242,15 @@ SWIFT_CLASS_NAMED("TransformToolController")
 @end
 
 
-@interface PESDKTransformToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <PESDKScalePickerDelegate>
-/// :nodoc:
-- (void)scalePicker:(CGFloat)value didChangeValue:(PESDKScalePicker * _Nonnull)scalePicker;
-@end
-
-
 @interface PESDKTransformToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <UIGestureRecognizerDelegate>
 /// :nodoc:
 - (BOOL)gestureRecognizer:(UIGestureRecognizer * _Nonnull)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer * _Nonnull)otherGestureRecognizer SWIFT_WARN_UNUSED_RESULT;
+@end
+
+
+@interface PESDKTransformToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <PESDKScalePickerDelegate>
+/// :nodoc:
+- (void)scalePicker:(CGFloat)value didChangeValue:(PESDKScalePicker * _Nonnull)scalePicker;
 @end
 
 
@@ -6222,7 +6270,13 @@ SWIFT_CLASS_NAMED("TransformToolController")
 @end
 
 
-@interface PESDKTransformToolController (SWIFT_EXTENSION(PhotoEditorSDK))
+@interface PESDKTransformToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <PESDKCropAndStraightenViewDelegate>
+/// :nodoc:
+- (void)cropAndStraightenViewWillBeginTracking:(PESDKCropAndStraightenView * _Nonnull)cropAndStraightenView;
+/// :nodoc:
+- (void)cropAndStraightenViewDidEndTracking:(PESDKCropAndStraightenView * _Nonnull)cropAndStraightenView;
+/// :nodoc:
+- (void)cropAndStraightenViewDidTrack:(PESDKCropAndStraightenView * _Nonnull)cropAndStraightenView;
 @end
 
 
@@ -6236,13 +6290,7 @@ SWIFT_CLASS_NAMED("TransformToolController")
 @end
 
 
-@interface PESDKTransformToolController (SWIFT_EXTENSION(PhotoEditorSDK)) <PESDKCropAndStraightenViewDelegate>
-/// :nodoc:
-- (void)cropAndStraightenViewWillBeginTracking:(PESDKCropAndStraightenView * _Nonnull)cropAndStraightenView;
-/// :nodoc:
-- (void)cropAndStraightenViewDidEndTracking:(PESDKCropAndStraightenView * _Nonnull)cropAndStraightenView;
-/// :nodoc:
-- (void)cropAndStraightenViewDidTrack:(PESDKCropAndStraightenView * _Nonnull)cropAndStraightenView;
+@interface PESDKTransformToolController (SWIFT_EXTENSION(PhotoEditorSDK))
 @end
 
 
@@ -6329,6 +6377,12 @@ SWIFT_CLASS_NAMED("TransformToolControllerOptionsBuilder")
 
 
 @interface UIColor (SWIFT_EXTENSION(PhotoEditorSDK))
+@end
+
+
+@interface UIDevice (SWIFT_EXTENSION(PhotoEditorSDK))
+/// Checks if the device is too old for our new blur.
+@property (nonatomic, readonly) BOOL isTooOldForLensBlurPreview;
 @end
 
 
@@ -6667,6 +6721,8 @@ SWIFT_CLASS_NAMED("_ObjCPhotoEditModel")
 @property (nonatomic) enum PESDKBlendMode overlayBlendMode;
 /// A value between 0 and 1, that determins the intensity that is used to render the overlay.
 @property (nonatomic) float overlayIntensity;
+/// The quality that should be used to blur the image. Low is used during preview, high during export.
+@property (nonatomic) enum BlurQuality blurQuality;
 /// The identity orientation of a photo edit model.
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) enum PESDKOrientation identityOrientation;)
 + (enum PESDKOrientation)identityOrientation SWIFT_WARN_UNUSED_RESULT;

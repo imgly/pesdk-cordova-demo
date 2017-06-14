@@ -43,13 +43,9 @@
                 <param name="onload" value="true" />
             </feature>
         </config-file>
-        <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:name="com.photoeditorsdk.cordova.CameraActivity" android:label="@string/app_name" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        </config-file>
 
         <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
         <source-file src="src/android/PESDKPlugin.java" target-dir="src/com/photoeditorsdk/cordova"/>
-        <source-file src="src/android/CameraActivity.java" target-dir="src/com/photoeditorsdk/cordova"/>
     </platform>
 
      <!-- iOS -->
