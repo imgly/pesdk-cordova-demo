@@ -40,7 +40,7 @@ public class PESDKPlugin extends CordovaPlugin {
         if (action.equals("present")) {
             // Extract image path
             JSONObject options = data.getJSONObject(0);
-            String filepath = options.getString("path");
+            String filepath = options.optString("path", "");
 
             Activity activity = this.cordova.getActivity();
             activity.runOnUiThread(this.present(activity, filepath, callbackContext));
@@ -55,7 +55,7 @@ public class PESDKPlugin extends CordovaPlugin {
         final PESDKPlugin self = this;
         return new Runnable() {
             public void run() {
-                if (mainActivity != null) {
+                if (mainActivity != null && filepath.length() > 0) {
                     SettingsList settingsList = new SettingsList();
                     settingsList
                         .getSettingsModel(EditorLoadSettings.class)
@@ -71,6 +71,11 @@ public class PESDKPlugin extends CordovaPlugin {
                     new PhotoEditorBuilder(mainActivity)
                             .setSettingsList(settingsList)
                             .startActivityForResult(mainActivity, PESDK_EDITOR_RESULT);
+                } else {
+                    // Just open the camera
+                    Intent intent = new Intent(mainActivity, CameraActivity.class);
+                    callback = callbackContext;
+                    cordova.startActivityForResult(self, intent, PESDK_EDITOR_RESULT);
                 }
             }
         };
