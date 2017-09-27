@@ -79,11 +79,9 @@
             if (imageData && !dataCreationError) {
                 PESDKPhotoEditViewController *photoEditViewController = [[PESDKPhotoEditViewController alloc] initWithData:imageData configuration:configuration];
                 photoEditViewController.delegate = self;
-                PESDKToolbarController *toolbarController = [PESDKToolbarController new];
-                [toolbarController pushViewController:photoEditViewController animated:YES completion:nil];
 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.viewController presentViewController:toolbarController animated:YES completion:nil];
+                    [self.viewController presentViewController:photoEditViewController animated:YES completion:nil];
                 });
             } else if (dataCreationError) {
                 NSLog(@"Failed to open given path: %@", dataCreationError);
@@ -93,10 +91,8 @@
             [cameraViewController setCompletionBlock:^(UIImage * _Nullable image, NSURL * _Nullable url) {
                 PESDKPhotoEditViewController *photoEditViewController = [[PESDKPhotoEditViewController alloc] initWithPhoto:image configuration:configuration];
                 photoEditViewController.delegate = self;
-                PESDKToolbarController *toolbarController = [PESDKToolbarController new];
-                [toolbarController pushViewController:photoEditViewController animated:YES completion:nil];
                 [self.viewController dismissViewControllerAnimated:YES completion:^{
-                    [self.viewController presentViewController:toolbarController animated:YES completion:nil];
+                    [self.viewController presentViewController:photoEditViewController animated:YES completion:nil];
                 }];
             }];
             
