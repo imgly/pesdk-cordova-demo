@@ -29,26 +29,16 @@ var app = {
   onDeviceReady: function() {
     selectImageBtn = document.getElementById('js-selectImageBtn');
     selectImageBtn.addEventListener('click', function() {
-      window.imagePicker.getPictures(
-        function(results) {
-          let imageURI = results[0];
-          PESDK.present(
-            function(result){
-              console.log(result);
-              alert('PESDK result: ' + JSON.stringify(result));
-            },
-            function(error){
-              alert('PESDK error: ' + error);
-            },
-            {
-              sourceType: 1,
-              path: imageURI
-            }
-          );
-        }, function (error) {
-          console.log('Error: ' + error);
-        }, {
-          maximumImagesCount: 1
+      PESDK.present(
+        function(result){
+          console.log(result);
+          alert('PESDK result: ' + JSON.stringify(result));
+        },
+        function(error){
+          alert('PESDK error: ' + error);
+        },
+        {
+          sourceType: 1
         }
       );
     });
