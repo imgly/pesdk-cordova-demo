@@ -46,16 +46,25 @@ In order to use the plugin within your Cordova app you need to provide license f
 
 ### iOS Configuration
 
-InThe plugin adds the `NSCameraUsageDescription` and `NSPhotoLibraryUsageDescription` keys to your iOS apps `Info.plist` file. These are required as of iOS 10 and not setting them will cause your app to crash.
-You can customize these messages to match your use case in the [plugin.xml](https://github.com/imgly/pesdk-cordova-demo/blob/master/plugin.xml) file:
+Since iOS 10 it's mandatory to provide an usage description in the `info.plist` if trying to access privacy-sensitive data. These are required and not setting them will cause your app to crash.
+
+This plugins requires the following usage descriptions:
+
+- `NSCameraUsageDescription` specifies the reason for your app to access the device's camera.
+- `NSPhotoLibraryUsageDescription` specifies the reason for your app to access the user's photo library.
+
+To add these entries into the `info.plist`, you can use the `edit-config` tag in the `config.xml` like this:
 
 ```
-    <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
-      <string># YOUR TEXT HERE #</string>
-    </config-file>
-    <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
-      <string># YOUR TEXT HERE #</string>
-    </config-file>
+<edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
+    <string># YOUR TEXT HERE #</string>
+</edit-config>
+```
+
+```
+<edit-config target="NSPhotoLibraryUsageDescription" file="*-Info.plist" mode="merge">
+    <string># YOUR TEXT HERE #</string>
+</edit-config>
 ```
 
 ### Android Configuration

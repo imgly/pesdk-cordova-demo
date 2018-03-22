@@ -74,16 +74,6 @@
          <hook type="after_plugin_install" src="hooks/resolveDependencies.js" />
          <hook type="after_platform_add" src="hooks/resolveDependencies.js" />
 
-         <!-- 
-            As we can't add plist entries using our applications
-            config.xml, we do it here:
-          -->
-         <config-file parent="NSCameraUsageDescription" target="*-Info.plist">
-            <string>Uses your camera to snap pictures.</string>
-         </config-file>
-         <config-file parent="NSPhotoLibraryUsageDescription" target="*-Info.plist">
-            <string>Accesses your photo library to save and open pictures.</string>
-         </config-file>
      </platform>
 
     <!-- Browser -->
