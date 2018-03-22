@@ -73,12 +73,6 @@
 
          <hook type="after_plugin_install" src="hooks/resolveDependencies.js" />
          <hook type="after_platform_add" src="hooks/resolveDependencies.js" />
-         <!-- 
-            Cordova doesn't handle Framework embedding as it's supposed
-            to. Use the following workaround instead:
-            http://stackoverflow.com/questions/36650522/custom-cordova-plugin-add-framework-to-embedded-binaries 
-          -->
-         <hook type="after_build" src="hooks/add_embedded.js" />
 
          <!-- 
             As we can't add plist entries using our applications
