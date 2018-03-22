@@ -22,6 +22,25 @@ The [PhotoEditor SDK](https://www.photoeditorsdk.com/?utm_campaign=Projects&utm_
 ## Installation
 In order to use the plugin within your Cordova app you need to follow some steps, detailed in the following paragraphs.
 
+Put your LICENSE_ANDROID and LICENSE_IOS in the root folder of your project and then add the following lines into your config.xml.
+
+In the platform tag for Android add the following resource-file tag if you are using cordova-android 7.0 or greater:
+
+```
+<platform name="android">
+  <resource-file src="LICENSE_ANDROID" target="app/src/main/assets/LICENSE_ANDROID" />
+</platform>
+```
+
+In the platform tag for iOS add the resource-file tag:
+
+```
+<platform name="ios">
+  <resource-file src="LICENSE_IOS" />
+</platform>
+```
+
+
 ### iOS Configuration
 
 The plugin adds the `NSCameraUsageDescription` and `NSPhotoLibraryUsageDescription` keys to your iOS apps `Info.plist` file. These are required as of iOS 10 and not setting them will cause your app to crash.
