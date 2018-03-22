@@ -57,13 +57,13 @@ To add these entries into the `info.plist`, you can use the `edit-config` tag in
 
 ```
 <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
-    <string># YOUR TEXT HERE #</string>
+    <string>Uses your camera to snap pictures.</string>
 </edit-config>
 ```
 
 ```
 <edit-config target="NSPhotoLibraryUsageDescription" file="*-Info.plist" mode="merge">
-    <string># YOUR TEXT HERE #</string>
+    <string>Accesses your photo library to save and open pictures.</string>
 </edit-config>
 ```
 
