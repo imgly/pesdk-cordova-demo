@@ -20,6 +20,5 @@
         "camera"
     ],
     "dependencies": {
-        "xcode": "https://github.com/alunny/node-xcode.git"
     }
 }
