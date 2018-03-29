@@ -45,27 +45,32 @@
  Presents a CameraViewController, passes the taken/selected
  image to the PhotoEditorViewController and saves the edited
  image to the iOS photo library upon save.
- 
+
  The given command is finished with different results, depending
  on the actions taken by the user:
  - Cancelling the editor results in no result.
  - Saving an edited image results in an OK result with the images
    filepath given as parameter.
  - Any errors lead to a corresponding result
- 
+
  See the `PESDKPhotoEditViewControllerDelegate` methods for
  more details.
- 
+
  @param command The command to be finished with any results.
  */
 - (void)present:(CDVInvokedUrlCommand *)command {
     if (self.lastCommand == nil) {
         self.lastCommand = command;
-        
+
         PESDKConfiguration *configuration = [[PESDKConfiguration alloc] initWithBuilder:^(PESDKConfigurationBuilder * _Nonnull builder) {
-            // Customize the SDK to match your requirements:
-            // ...eg.:
-            // [builder setBackgroundColor:[UIColor whiteColor]];
+          // Customize the SDK to match your requirements:
+          // ...eg.:
+          // [builder setBackgroundColor:[UIColor whiteColor]];
+
+          // Disable video recording
+          [builder configureCameraViewController:^(PESDKCameraViewControllerOptionsBuilder * _Nonnull cameraBuilder) {
+            [cameraBuilder setAllowedRecordingModesAsNSNumbers:@[@0]];
+          }];
         }];
 
         // Parse arguments and extract filepath
@@ -74,7 +79,7 @@
         if (filepath) {
             NSError *dataCreationError;
             NSData *imageData = [NSData dataWithContentsOfFile:filepath options:0 error:&dataCreationError];
-            
+
             // Open PESDK
             if (imageData && !dataCreationError) {
                 PESDKPhotoEditViewController *photoEditViewController = [[PESDKPhotoEditViewController alloc] initWithData:imageData configuration:configuration];
@@ -95,7 +100,7 @@
                     [self.viewController presentViewController:photoEditViewController animated:YES completion:nil];
                 }];
             }];
-            
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.viewController presentViewController:cameraViewController animated:YES completion:nil];
             });
@@ -200,7 +205,7 @@
 - (void)saveImageToPhotoLibrary:(UIImage *)image {
     [self.commandDelegate runInBackground:^{
         __block PHObjectPlaceholder *assetPlaceholder = nil;
-        
+
         // Apple did a great job at making this API convoluted as fuck.
         PHPhotoLibrary *photos = [PHPhotoLibrary sharedPhotoLibrary];
         [photos performChanges:^{
@@ -230,7 +235,7 @@
                                                                         resultAsync = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                                                                     messageAsDictionary:payload];
                                                                     }
-                                                                    
+
                                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                                         [self closeControllerWithResult:resultAsync];
                                                                     });
@@ -244,7 +249,7 @@
                 result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
                                            messageAsString:[error localizedDescription]];
             }
-            
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self closeControllerWithResult:result];
             });
