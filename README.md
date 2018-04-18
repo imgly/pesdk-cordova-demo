@@ -7,6 +7,8 @@ This project shows how to easily integrate the [PhotoEditor SDK](https://www.pho
 
 **THIS IS A DEMO**. This repository is not meant as a fully fledged Cordova plugin, but as a base for further development instead. You can copy the repository into your own project and use the `cordova plugin add /path/to/plugin --link` command to add it to your app. You will most likely need to adjust the codebase to fit your requirements and to customize the PhotoEditor SDK. For customizations, take a look at the [PESDKPlugin.m](src/ios/PESDKPlugin.m) and [PESDKPlugin.java](src/android/PESDKPlugin.java) files. You can easily alter the configurations to change colors, behaviour etc. and handle callbacks that are sent by our SDK. For further reference take a look at our [documentation](http://docs.photoeditorsdk.com/?utm_campaign=Projects&utm_source=Github&utm_medium=Side_Projects&utm_content=Cordova-Demo).
 
+> :warning: The latest iOS SDK needs to be downloaded manually from [our repository](https://github.com/imgly/pesdk-ios-build/releases) and placed in the `/src/ios/` directory.
+
 ## License Files
 
 > :warning: The SDK requires dedicated license files for each platform. If unavailable, the camera and editor will crash upon launch.
