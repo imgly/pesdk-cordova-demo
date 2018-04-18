@@ -20,5 +20,6 @@
         "camera"
     ],
     "dependencies": {
+        "cordova-plugin-add-swift-support": "^1.7.1"
     }
 }
