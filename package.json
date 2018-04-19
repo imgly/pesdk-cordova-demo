@@ -18,5 +18,8 @@
         "cordova-ios",
         "phonegap",
         "camera"
-    ]
+    ],
+    "dependencies": {
+
+    }
 }
