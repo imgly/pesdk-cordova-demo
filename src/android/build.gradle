@@ -12,25 +12,25 @@ repositories {
 }
 
 android {
-
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
-
     defaultConfig {
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
-    }
-
-    dataBinding {
-        enabled = true
+        vectorDrawables.useSupportLibrary true
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    packagingOptions {
+        pickFirst 'lib/mips/librsjni.so'
+        pickFirst 'lib/mips/libRSSupport.so'
+    }
 }
 
 dependencies {
-    compile 'ly.img.android:photo-editor-sdk:5.0.20'
+    compile 'ly.img.android:photo-editor-sdk:5.1.5'
 }
+
+
