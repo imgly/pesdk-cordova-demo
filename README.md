@@ -71,7 +71,28 @@ To add these entries into the `info.plist`, you can use the `edit-config` tag in
 
 ### Android Configuration
 
-No special configuration is needed for Android. Just require the plugin.
+As the Android SDK links different modules depending on your configuration, we're providing a Gradle plugin which needs to be added to your Android project. To prepare this, you'll have to add the following lines to your projects .gradle file (`platforms/android/build.gradle`):
+
+```
+buildscript {
+    repositories {
+        // ...
+        maven { url "https://artifactory.9elements.com/artifactory/imgly" }
+    }
+    dependencies {
+        // ...
+        classpath 'ly.img.android.pesdk:plugin:6.0.0'
+    }
+}
+
+allprojects {
+    repositories {
+        // ...
+        maven { url "https://artifactory.9elements.com/artifactory/imgly" }
+    }
+    // ...
+}
+```
 
 ## Development
 The example app was created by starting a new Cordova app, adding the iOS and Android platforms and linking the plugin using the `cordova plugin add /path/to/plugin --link` command mentioned above.

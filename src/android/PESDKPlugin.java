@@ -16,25 +16,18 @@ import org.json.JSONObject;
 import java.io.File;
 
 import ly.img.android.PESDK;
-import ly.img.android.sdk.models.constant.Directory;
-import ly.img.android.sdk.models.state.EditorLoadSettings;
-import ly.img.android.sdk.models.state.EditorSaveSettings;
-import ly.img.android.sdk.models.state.manager.SettingsList;
-import ly.img.android.ui.activities.ImgLyIntent;
-import ly.img.android.ui.activities.PhotoEditorBuilder;
+import ly.img.android.pesdk.backend.model.constant.Directory;
+import ly.img.android.pesdk.backend.model.state.EditorLoadSettings;
+import ly.img.android.pesdk.backend.model.state.EditorSaveSettings;
+import ly.img.android.pesdk.backend.model.state.manager.SettingsList;
+import ly.img.android.pesdk.ui.activity.ImgLyIntent;
+import ly.img.android.pesdk.ui.activity.PhotoEditorBuilder;
 
 public class PESDKPlugin extends CordovaPlugin {
 
     public static final int PESDK_EDITOR_RESULT = 1;
     private CallbackContext callback = null;
 
-    @Override
-    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
-        super.initialize(cordova, webView);
-        
-        PESDK.init(cordova.getActivity().getApplication(), "LICENSE_ANDROID");
-    }
-    
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         if (action.equals("present")) {

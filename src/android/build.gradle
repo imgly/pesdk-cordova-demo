@@ -1,26 +1,91 @@
 buildscript {
     repositories {
         jcenter()
+        google()
+        maven { url 'https://artifactory.9elements.com/artifactory/imgly' }
+    }
+    dependencies {
+        classpath 'ly.img.android.pesdk:plugin:6.0.0'
     }
 }
-apply plugin: 'com.android.application'
+
+dependencies {
+    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.51'
+}
 
 repositories {
-    maven {
-        url "https://artifactory.9elements.com/artifactory/imgly"
+    jcenter()
+    google()
+    maven { url 'https://artifactory.9elements.com/artifactory/imgly' }
+}
+
+// Apply the Android Plugin
+apply plugin: 'com.android.application'
+
+// Apply the PESDKPlugin.
+// [!] This assumes you made the correct changes to your projects build.gradle file!
+//     See https://docs.photoeditorsdk.com/guides/android/v6/introduction/getting_started for details.
+apply plugin: 'ly.img.android.pesdk'
+
+// Configure the PESDKPlugin
+pesdkConfig {
+
+    licencePath "LICENSE_ANDROID" // Name of the Licence file in the asset folder
+
+    // Insert the latest SDK version here. You will find it here https://github.com/imgly/pesdk-android-demo/releases
+    pesdkVersion "6.0.0"
+
+    // If you use another supportLibVersion ('com.android.support'), change this version here to update your own supportLibVersion
+    supportLibVersion "27.1.1"
+
+    // Define the modules you are need
+    modules {
+        // Add all the backend modules you need
+        include 'ly.img.android.pesdk.operation:text'
+        include 'ly.img.android.pesdk.operation:frame'
+        include 'ly.img.android.pesdk.operation:focus'
+        include 'ly.img.android.pesdk.operation:brush'
+        include 'ly.img.android.pesdk.operation:camera'
+        include 'ly.img.android.pesdk.operation:filter'
+        include 'ly.img.android.pesdk.operation:sticker'
+        include 'ly.img.android.pesdk.operation:overlay'
+        include 'ly.img.android.pesdk.operation:adjustment'
+        include 'ly.img.android.pesdk.operation:text-design'
+        include 'ly.img.android.pesdk.operation:abstract-sticker'
+
+        // Add all the UI modules you are need
+        include 'ly.img.android.pesdk.ui.mobile_ui:core'
+        include 'ly.img.android.pesdk.ui.mobile_ui:text'
+        include 'ly.img.android.pesdk.ui.mobile_ui:focus'
+        include 'ly.img.android.pesdk.ui.mobile_ui:frame'
+        include 'ly.img.android.pesdk.ui.mobile_ui:brush'
+        include 'ly.img.android.pesdk.ui.mobile_ui:filter'
+        include 'ly.img.android.pesdk.ui.mobile_ui:camera'
+        include 'ly.img.android.pesdk.ui.mobile_ui:sticker'
+        include 'ly.img.android.pesdk.ui.mobile_ui:overlay'
+        include 'ly.img.android.pesdk.ui.mobile_ui:transform'
+        include 'ly.img.android.pesdk.ui.mobile_ui:adjustment'
+        include 'ly.img.android.pesdk.ui.mobile_ui:text-design'
+
+
+        // Add the serializer if you need
+        include 'ly.img.android.pesdk:serializer'
+
+        // Add asset packs if you need
+        include 'ly.img.android.pesdk.assets:font-basic'
+        include 'ly.img.android.pesdk.assets:font-text-design'
+        include 'ly.img.android.pesdk.assets:frame-basic'
+        include 'ly.img.android.pesdk.assets:filter-basic'
+        include 'ly.img.android.pesdk.assets:overlay-basic'
+        include 'ly.img.android.pesdk.assets:sticker-shapes'
+        include 'ly.img.android.pesdk.assets:sticker-emoticons'
     }
 }
 
 android {
-    defaultConfig {
-        renderscriptTargetApi 23
-        renderscriptSupportModeEnabled true
-        vectorDrawables.useSupportLibrary true
-    }
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     packagingOptions {
@@ -28,9 +93,3 @@ android {
         pickFirst 'lib/mips/libRSSupport.so'
     }
 }
-
-dependencies {
-    compile 'ly.img.android:photo-editor-sdk:5.1.5'
-}
-
-
