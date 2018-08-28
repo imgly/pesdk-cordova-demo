@@ -16,12 +16,24 @@ import org.json.JSONObject;
 import java.io.File;
 
 import ly.img.android.PESDK;
+import ly.img.android.pesdk.assets.filter.basic.FilterPackBasic;
+import ly.img.android.pesdk.assets.font.basic.FontPackBasic;
+import ly.img.android.pesdk.assets.frame.basic.FramePackBasic;
+import ly.img.android.pesdk.assets.overlay.basic.OverlayPackBasic;
+import ly.img.android.pesdk.assets.sticker.emoticons.StickerPackEmoticons;
+import ly.img.android.pesdk.assets.sticker.shapes.StickerPackShapes;
 import ly.img.android.pesdk.backend.model.constant.Directory;
+import ly.img.android.pesdk.backend.model.state.CameraSettings;
 import ly.img.android.pesdk.backend.model.state.EditorLoadSettings;
 import ly.img.android.pesdk.backend.model.state.EditorSaveSettings;
 import ly.img.android.pesdk.backend.model.state.manager.SettingsList;
 import ly.img.android.pesdk.ui.activity.ImgLyIntent;
 import ly.img.android.pesdk.ui.activity.PhotoEditorBuilder;
+import ly.img.android.pesdk.ui.model.state.UiConfigFilter;
+import ly.img.android.pesdk.ui.model.state.UiConfigFrame;
+import ly.img.android.pesdk.ui.model.state.UiConfigOverlay;
+import ly.img.android.pesdk.ui.model.state.UiConfigSticker;
+import ly.img.android.pesdk.ui.model.state.UiConfigText;
 
 public class PESDKPlugin extends CordovaPlugin {
 
@@ -49,7 +61,7 @@ public class PESDKPlugin extends CordovaPlugin {
         return new Runnable() {
             public void run() {
                 if (mainActivity != null && filepath.length() > 0) {
-                    SettingsList settingsList = new SettingsList();
+                    SettingsList settingsList = createPesdkSettingsList();
                     settingsList
                         .getSettingsModel(EditorLoadSettings.class)
                         .setImageSourcePath(filepath.replace("file://", ""), true) // Load with delete protection true!
@@ -72,6 +84,36 @@ public class PESDKPlugin extends CordovaPlugin {
                 }
             }
         };
+    }
+
+    private SettingsList createPesdkSettingsList() {
+        SettingsList settingsList = new SettingsList();
+        settingsList.getSettingsModel(UiConfigFilter.class).setFilterList(
+                FilterPackBasic.getFilterPack()
+        );
+        settingsList.getSettingsModel(UiConfigText.class).setFontList(
+                FontPackBasic.getFontPack()
+        );
+        settingsList.getSettingsModel(UiConfigFrame.class).setFrameList(
+                FramePackBasic.getFramePack()
+        );
+        settingsList.getSettingsModel(UiConfigOverlay.class).setOverlayList(
+                OverlayPackBasic.getOverlayPack()
+        );
+        settingsList.getSettingsModel(UiConfigSticker.class).setStickerLists(
+                StickerPackEmoticons.getStickerCategory(),
+                StickerPackShapes.getStickerCategory()
+        );
+
+        settingsList.getSettingsModel(CameraSettings.class)
+                .setExportDir(Directory.DCIM, "SomeFolderName")
+                .setExportPrefix("camera_");
+        settingsList.getSettingsModel(EditorSaveSettings.class)
+                .setExportDir(Directory.DCIM, "SomeFolderName")
+                .setExportPrefix("result_")
+                .setSavePolicy(EditorSaveSettings.SavePolicy.RETURN_ALWAYS_ONLY_OUTPUT);
+
+        return settingsList;
     }
 
     @Override
