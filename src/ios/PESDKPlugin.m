@@ -70,6 +70,7 @@
           // Disable video recording
           [builder configureCameraViewController:^(PESDKCameraViewControllerOptionsBuilder * _Nonnull cameraBuilder) {
             [cameraBuilder setAllowedRecordingModesAsNSNumbers:@[@0]];
+            [cameraBuilder setShowCancelButton:YES];
           }];
         }];
 
@@ -93,6 +94,9 @@
             }
         } else {
             PESDKCameraViewController *cameraViewController = [[PESDKCameraViewController alloc] initWithConfiguration:configuration];
+            [cameraViewController setCancelBlock:^{
+              [self closeControllerWithResult:nil];
+            }];
             [cameraViewController setCompletionBlock:^(UIImage * _Nullable image, NSURL * _Nullable url) {
                 PESDKPhotoEditViewController *photoEditViewController = [[PESDKPhotoEditViewController alloc] initWithPhoto:image configuration:configuration];
                 photoEditViewController.delegate = self;
