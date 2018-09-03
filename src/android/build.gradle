@@ -5,7 +5,8 @@ buildscript {
         maven { url 'https://artifactory.9elements.com/artifactory/imgly' }
     }
     dependencies {
-        classpath 'ly.img.android.pesdk:plugin:6.0.0'
+        // Insert the latest SDK version here. You will find it here https://github.com/imgly/pesdk-android-demo/releases
+        classpath 'ly.img.android.pesdk:plugin:6.0.3'
     }
 }
 
@@ -31,9 +32,6 @@ apply plugin: 'ly.img.android.pesdk'
 pesdkConfig {
 
     licencePath "LICENSE_ANDROID" // Name of the Licence file in the asset folder
-
-    // Insert the latest SDK version here. You will find it here https://github.com/imgly/pesdk-android-demo/releases
-    pesdkVersion "6.0.0"
 
     // If you use another supportLibVersion ('com.android.support'), change this version here to update your own supportLibVersion
     supportLibVersion "27.1.1"
