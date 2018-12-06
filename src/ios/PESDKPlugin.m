@@ -69,7 +69,7 @@
 
           // Disable video recording
           [builder configureCameraViewController:^(PESDKCameraViewControllerOptionsBuilder * _Nonnull cameraBuilder) {
-            [cameraBuilder setAllowedRecordingModesAsNSNumbers:@[@0]];
+            [cameraBuilder setAllowedRecordingModes:@[@0]];
             [cameraBuilder setShowCancelButton:YES];
           }];
         }];
@@ -83,7 +83,8 @@
 
             // Open PESDK
             if (imageData && !dataCreationError) {
-                PESDKPhotoEditViewController *photoEditViewController = [[PESDKPhotoEditViewController alloc] initWithData:imageData configuration:configuration];
+                PESDKPhoto *photo = [[PESDKPhoto alloc] initWithData:imageData];
+                PESDKPhotoEditViewController *photoEditViewController = [[PESDKPhotoEditViewController alloc] initWithPhotoAsset:photo configuration:configuration];
                 photoEditViewController.delegate = self;
 
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -98,7 +99,8 @@
               [self closeControllerWithResult:nil];
             }];
             [cameraViewController setCompletionBlock:^(UIImage * _Nullable image, NSURL * _Nullable url) {
-                PESDKPhotoEditViewController *photoEditViewController = [[PESDKPhotoEditViewController alloc] initWithPhoto:image configuration:configuration];
+                PESDKPhoto *photo = [[PESDKPhoto alloc] initWithImage:image];
+                PESDKPhotoEditViewController *photoEditViewController = [[PESDKPhotoEditViewController alloc] initWithPhotoAsset:photo configuration:configuration];
                 photoEditViewController.delegate = self;
                 [self.viewController dismissViewControllerAnimated:YES completion:^{
                     [self.viewController presentViewController:photoEditViewController animated:YES completion:nil];
