@@ -81,7 +81,7 @@ buildscript {
     }
     dependencies {
         // ...
-        classpath 'ly.img.android.pesdk:plugin:6.0.0'
+        classpath 'ly.img.android.pesdk:plugin:6.2.7'
     }
 }
 
