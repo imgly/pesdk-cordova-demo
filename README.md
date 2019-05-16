@@ -37,7 +37,7 @@ Within the iOS platform tag:
 The included example app demonstrates how to open the PhotoEditor SDK's camera and pass any taken or selected images to the editor. When an edited image is saved, its filepath is sent back to Cordova and displayed using a JavaScript alert. An app could then display this image in Cordova or send it to a backend. If you want to edit an already existing image, you just need to path a path to the file (keep the file handling methods on both platforms in mind). To launch the example app, take a look at the *Development* section below.
 
 ## Note 
-The PhotoEditorSDK is a product of 9elements GmbH. 
+The PhotoEditorSDK is a product of img.ly GmbH. 
 Please [order a license](https://www.photoeditorsdk.com/pricing/?utm_campaign=Projects&utm_source=Github&utm_medium=Side_Projects&utm_content=Cordova-Demo). Please see the included [LICENSE](LICENSE.md) for licensing details.
 
 ## PhotoEditor SDK for iOS & Android
@@ -105,7 +105,7 @@ If you make changes to the plugin in the root directory, you'll likely have to r
 Please see [LICENSE](https://github.com/imgly/pesdk-html5-rails/blob/master/LICENSE.md) for licensing details.
 
 ## Authors and Contributors
-Made 2013-2018 by @9elements
+Made 2013-2018 by img.ly
 
 ## Support or Contact
 Use our [service desk](http://support.photoeditorsdk.com) for bug reports or support requests. To request a commercial license, please use the [license request form](https://www.photoeditorsdk.com/pricing) on our website.
