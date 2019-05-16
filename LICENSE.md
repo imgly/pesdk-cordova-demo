@@ -1,4 +1,4 @@
-Copyright (C) 2017 9elements GmbH <contact@9elements.com>
+Copyright (C) 2019 img.ly GmbH <contact@img.ly>
 All rights reserved.
 
 pesdk-react-native-demo is available for use under the following license, commonly known
@@ -16,7 +16,7 @@ https://www.photoeditorsdk.com/LICENSE.txt
 Modified BSD LICENSE
 ====================
 
-_Copyright © 2017, 9elements GmbH
+_Copyright © 2019, img.ly GmbH
 _All rights reserved._
 
 Redistribution and use in source and binary forms, with or without
