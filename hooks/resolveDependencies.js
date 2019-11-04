@@ -152,10 +152,10 @@
 
     module.exports = function (ctx) {
         // resolve modules
-        exec = ctx.requireCordovaModule('child_process').exec,
-        fs = ctx.requireCordovaModule('fs'),
-        path = ctx.requireCordovaModule('path'),
-        deferral = ctx.requireCordovaModule('q').defer();
+        exec = require('child_process').exec,
+        fs = require('fs'),
+        path = require('path'),
+        deferral = require('q').defer();
 
         // resolve paths
         hooksPath = path.resolve(ctx.opts.projectRoot, "plugins", ctx.opts.plugin.id, "hooks");
