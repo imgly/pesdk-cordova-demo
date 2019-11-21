@@ -70,7 +70,7 @@
          <framework src="AssetsLibrary.framework" />
          <framework src="MobileCoreServices.framework" />
          <framework src="src/ios/PhotoEditorSDK.framework" custom="true" embed="true" />
-         <framework src="src/ios/imglyKit.framework" custom="true" embed="true" />
+         <framework src="src/ios/ImglyKit.framework" custom="true" embed="true" />
 
          <!-- Custom Hooks -->
          <hook type="after_plugin_install" src="hooks/resolveDependencies.js" />
