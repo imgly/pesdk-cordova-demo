@@ -131,7 +131,14 @@
                                     return -1;
                                 }
                                 logger.verbose("Removed package.json.tmp");
-                                complete();
+                                installModules(function(err) {
+                                    if (err) {
+                                        deferral.reject("Error installing original modules: " + err);
+                                        return -1;
+                                    }
+                                    logger.verbose("Installed original modules");
+                                    complete();
+                                });
                             })
                         });
                     } else {
