@@ -26,5 +26,4 @@
     <preference name="UseSwiftLanguageVersion" value="4.1" />
     <plugin name="cordova-plugin-pesdk" spec=".." />
     <engine name="ios" spec="^4.5.4" />
-    <engine name="android" spec="^7.0.0" />
 </widget>

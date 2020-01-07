@@ -10,10 +10,11 @@
     "author": "Apache Cordova Team",
     "license": "Apache-2.0",
     "dependencies": {
-        "cordova-android": "^7.0.0",
+        "cordova-android": "^8.1.0",
         "cordova-ios": "^4.5.4",
         "cordova-plugin-add-swift-support": "^1.7.1",
-        "cordova-plugin-whitelist": "^1.3.3"
+        "cordova-plugin-whitelist": "^1.3.4",
+        "pesdk-cordova-plugin": "file:.."
     },
     "cordova": {
         "plugins": {
@@ -21,8 +22,7 @@
             "cordova-plugin-pesdk": {}
         },
         "platforms": [
-            "ios",
-            "android"
+            "ios"
         ]
     }
 }
