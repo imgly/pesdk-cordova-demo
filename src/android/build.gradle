@@ -19,7 +19,6 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
 
 // Apply the PESDKPlugin.
 // [!] This assumes you made the correct changes to your projects build.gradle file!
@@ -33,9 +32,6 @@ imglyConfig {
         enabled true
         licencePath 'LICENSE_ANDROID' // Name of the Licence file in the asset folder
     }
-
-    // If you use another supportLibVersion ('com.android.support'), change this version here to update your own supportLibVersion
-    supportLibVersion "28.0.0"
 
     // Define the modules you are need
     modules {
