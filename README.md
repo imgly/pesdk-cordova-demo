@@ -77,18 +77,20 @@ As the Android SDK links different modules depending on your configuration, we'r
 buildscript {
     repositories {
         // ...
-        maven { url "https://artifactory.9elements.com/artifactory/imgly" }
+        maven { url 'https://artifactory.img.ly/artifactory/imgly' }
     }
     dependencies {
         // ...
-        classpath 'ly.img.android.pesdk:plugin:6.2.7'
+        classpath 'ly.img.android.pesdk:plugin:7.0.10'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:1.3.61"
     }
 }
 
 allprojects {
     repositories {
         // ...
-        maven { url "https://artifactory.9elements.com/artifactory/imgly" }
+        maven { url 'https://artifactory.img.ly/artifactory/imgly' }
     }
     // ...
 }
