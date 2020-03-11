@@ -20,6 +20,8 @@
         "camera"
     ],
     "dependencies": {
-
+        "glob": "^7.1.5",
+        "q": "^1.5.1",
+        "xcode": "^2.0.0"
     }
 }
